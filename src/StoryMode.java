@@ -16,6 +16,9 @@ public class StoryMode {
         story.add("Chapter 2: Mobs");
         story.add("Chapter 3: Collecting Jewels");
         story.add("Chapter 4: Boss");
+        story.add("Chapter 5: Closure");
+    }
+    public void chapterOne(){
     }
     public void nextChapter() {
         currentChapter++;
