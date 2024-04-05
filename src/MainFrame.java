@@ -1,9 +1,10 @@
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class MainFrame extends JFrame implements Runnable {
 
     private DrawPanel p;
     private Thread windowThread;
+    private JFrame frame;
 
     public MainFrame(String display) {
         super(display);
