@@ -10,7 +10,7 @@ public class DrawPanel extends JPanel {
     private Rectangle button;
 
     public DrawPanel() {
-        button = new Rectangle(575, 0, 500, 200);
+        button = new Rectangle(565, 310, 805, 265);
     }
 
     protected void paintComponent(Graphics g) {
