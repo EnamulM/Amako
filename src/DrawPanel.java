@@ -30,13 +30,13 @@ public class DrawPanel extends JPanel implements MouseListener{
         g.setFont(new Font("Times New Roman", Font.BOLD, 200));
         g.drawString("AMAKO", 575, 500);
         g.drawRect((int) button.getX(), (int) button.getY(), (int) button.getWidth(), (int) button.getHeight());
-        g.drawImage(background, 500, 500, null);
+        g.drawImage(background, 1000, 500, null);
     }
     @Override
     public void mouseClicked(MouseEvent e) {
         if (button.contains(e.getPoint())) {
             try {
-                background = ImageIO.read(new File("OpeningBackground.jpg"));
+                background = ImageIO.read(new File("BackgroundImages/OpeningBackGround.jpg"));
                 repaint();
             } catch (IOException ex) {
                 // Handle exception
