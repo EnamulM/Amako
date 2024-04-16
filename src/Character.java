@@ -7,7 +7,9 @@ public class Character {
     private int longRange;
     private int x;
     private int y;
-    public Character(int health, int damage, int shortRange, int longRange, int x, int y) {
+    private int h;
+    private int w;
+    public Character(int health, int damage, int shortRange, int longRange, int x, int y,int h, int w) {
         this.health = health;
         this.damage = damage;
         this.shortRange = shortRange;
