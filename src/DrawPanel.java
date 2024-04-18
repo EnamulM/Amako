@@ -33,6 +33,7 @@ public class DrawPanel extends JPanel implements MouseListener{
         g.drawRect((int) button.getX(), (int) button.getY(), (int) button.getWidth(), (int) button.getHeight());
         g.drawImage(background, 0, 0, getWidth(), getHeight(),null);
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (button.contains(e.getPoint())) {
