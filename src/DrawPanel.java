@@ -68,35 +68,35 @@ public class DrawPanel extends JPanel implements MouseListener{
             } catch (IOException e) {
                 System.out.println("Error Loading Image! Sorry!");
             }
-            g2d.drawImage(oldMan1, getWidth() / 2, getHeight() / 2, 500, 500, null);
+            g2d.drawImage(oldMan1, 0, 0, 500, 500, null);
             Thread.sleep(500);
             try {
                 oldMan2 = ImageIO.read(new File("OldMan/Talking2.png"));
             } catch (IOException e) {
                 System.out.println("Error Loading Image! Sorry!");
             }
-            g2d.drawImage(oldMan2, getWidth() / 2, getHeight() / 2, 500, 500, null);
+            g2d.drawImage(oldMan2, 0, 0, 500, 500, null);
             Thread.sleep(500);
             try {
                 oldMan3 = ImageIO.read(new File("OldMan/Talking3.png"));
             } catch (IOException e) {
                 System.out.println("Error Loading Image! Sorry!");
             }
-            g2d.drawImage(oldMan3, getWidth() / 2, getHeight() / 2, 500, 500, null);
+            g2d.drawImage(oldMan3, 0, 0, 500, 500, null);
             Thread.sleep(500);
             try {
                 oldMan4 = ImageIO.read(new File("OldMan/Talking4.png"));
             } catch (IOException e) {
                 System.out.println("Error Loading Image! Sorry!");
             }
-            g2d.drawImage(oldMan4, getWidth() / 2, getHeight() / 2, 500, 500, null);
+            g2d.drawImage(oldMan4, 0, 0, 500, 500, null);
             Thread.sleep(500);
             try {
                 oldMan5 = ImageIO.read(new File("OldMan/Talking5.png"));
             } catch (IOException e) {
                 System.out.println("Error Loading Image! Sorry!");
             }
-            g2d.drawImage(oldMan5, getWidth() / 2, getHeight() / 2, 500, 500, null);
+            g2d.drawImage(oldMan5, 0, 0, 500, 500, null);
             Thread.sleep(500);
         } catch (InterruptedException e) {
             System.out.println("Thread sleep error");
