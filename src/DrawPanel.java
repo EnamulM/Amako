@@ -69,7 +69,9 @@ public class DrawPanel extends JPanel implements MouseListener{
                 System.out.println("Error Loading Image! Sorry!");
             }
             g2d.drawImage(oldMan1, 0, 0, 500, 500, null);
-            Thread.sleep(500);
+            g.setFont(new Font("Times New Roman", Font.BOLD, 100));
+            g.drawString("Once Upon a Time ", 575, 500);
+            Thread.sleep(1000);
             try {
                 oldMan2 = ImageIO.read(new File("OldMan/Talking2.png"));
             } catch (IOException e) {
