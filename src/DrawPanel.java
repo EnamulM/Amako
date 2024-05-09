@@ -18,6 +18,10 @@ public class DrawPanel extends JPanel implements MouseListener{
     private Image background;
     private JPanel mainPanel;
     private boolean onStartingScreen = true;
+    private boolean next1 = false;
+    private boolean next2 = false;
+
+
 
     public DrawPanel() {
         button = new Rectangle(565, 310, 805, 265);
@@ -48,10 +52,18 @@ public class DrawPanel extends JPanel implements MouseListener{
                 if (onStartingScreen){
                     background = ImageIO.read(new File("BackgroundImages/OpeningBackGround.jpg"));
                     onStartingScreen = false;
+                    next1 = true;
                     repaint();
                 }
-                else {
+                else if(next1){
                     talk(getGraphics());
+                    talk(getGraphics());
+                    next1 = false;
+                    next2 = true;
+                }
+                else if(next2){
+                    System.out.println("Works");
+                    next2 = false;
                 }
             } catch (IOException ex) {
                 // Handle exception
@@ -61,49 +73,53 @@ public class DrawPanel extends JPanel implements MouseListener{
 
     }
     public void talk(Graphics g){
-        try {
-            Graphics2D g2d = (Graphics2D) g;
             try {
-                oldMan1 = ImageIO.read(new File("OldMan/Talking1.png"));
-            } catch (IOException e) {
-                System.out.println("Error Loading Image! Sorry!");
+                Graphics2D g2d = (Graphics2D) g;
+                try {
+                    oldMan1 = ImageIO.read(new File("OldMan/Talking1.png"));
+                } catch (IOException e) {
+                    System.out.println("Error Loading Image! Sorry!");
+                }
+                g2d.drawImage(oldMan1, 0, 0, 500, 500, null);
+                g.setFont(new Font("Times New Roman", Font.BOLD, 100));
+                g.drawString("The Real Needs Your Help! ", 575, 500);
+                g.drawString("An evil being has overtaken the land!", 200, 600);
+                g.drawString("We need you to free us! Press to Continue", 0, 700);
+
+                Thread.sleep(500);
+                try {
+                    oldMan2 = ImageIO.read(new File("OldMan/Talking2.png"));
+                } catch (IOException e) {
+                    System.out.println("Error Loading Image! Sorry!");
+                }
+                g2d.drawImage(oldMan2, 0, 0, 500, 500, null);
+                Thread.sleep(500);
+                try {
+                    oldMan3 = ImageIO.read(new File("OldMan/Talking3.png"));
+                } catch (IOException e) {
+                    System.out.println("Error Loading Image! Sorry!");
+                }
+                g2d.drawImage(oldMan3, 0, 0, 500, 500, null);
+                Thread.sleep(500);
+                try {
+                    oldMan4 = ImageIO.read(new File("OldMan/Talking4.png"));
+                } catch (IOException e) {
+                    System.out.println("Error Loading Image! Sorry!");
+                }
+                g2d.drawImage(oldMan4, 0, 0, 500, 500, null);
+                Thread.sleep(500);
+                try {
+                    oldMan5 = ImageIO.read(new File("OldMan/Talking5.png"));
+                } catch (IOException e) {
+                    System.out.println("Error Loading Image! Sorry!");
+                }
+                g2d.drawImage(oldMan5, 0, 0, 500, 500, null);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                System.out.println("Thread sleep error");
             }
-            g2d.drawImage(oldMan1, 0, 0, 500, 500, null);
-            g.setFont(new Font("Times New Roman", Font.BOLD, 100));
-            g.drawString("Once Upon a Time ", 575, 500);
-            Thread.sleep(1000);
-            try {
-                oldMan2 = ImageIO.read(new File("OldMan/Talking2.png"));
-            } catch (IOException e) {
-                System.out.println("Error Loading Image! Sorry!");
-            }
-            g2d.drawImage(oldMan2, 0, 0, 500, 500, null);
-            Thread.sleep(500);
-            try {
-                oldMan3 = ImageIO.read(new File("OldMan/Talking3.png"));
-            } catch (IOException e) {
-                System.out.println("Error Loading Image! Sorry!");
-            }
-            g2d.drawImage(oldMan3, 0, 0, 500, 500, null);
-            Thread.sleep(500);
-            try {
-                oldMan4 = ImageIO.read(new File("OldMan/Talking4.png"));
-            } catch (IOException e) {
-                System.out.println("Error Loading Image! Sorry!");
-            }
-            g2d.drawImage(oldMan4, 0, 0, 500, 500, null);
-            Thread.sleep(500);
-            try {
-                oldMan5 = ImageIO.read(new File("OldMan/Talking5.png"));
-            } catch (IOException e) {
-                System.out.println("Error Loading Image! Sorry!");
-            }
-            g2d.drawImage(oldMan5, 0, 0, 500, 500, null);
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            System.out.println("Thread sleep error");
         }
-    }
+
 
     @Override
     public void mousePressed(MouseEvent e) {}
