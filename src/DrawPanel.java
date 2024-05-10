@@ -13,6 +13,8 @@ public class DrawPanel extends JPanel implements MouseListener{
     private static Image oldMan3;
     private static Image oldMan4;
     private static Image oldMan5;
+    private Image introduction1;
+
 
     private Rectangle button;
     private Image background;
@@ -63,6 +65,7 @@ public class DrawPanel extends JPanel implements MouseListener{
                 }
                 else if(next2){
                     System.out.println("Works");
+                    introduction(getGraphics());
                     next2 = false;
                 }
             } catch (IOException ex) {
@@ -119,9 +122,19 @@ public class DrawPanel extends JPanel implements MouseListener{
                 System.out.println("Thread sleep error");
             }
         }
+    public void introduction(Graphics g) {
+        try{
+            background = ImageIO.read(new File("BackgroundImages/Background1.jpg"));
+        }
+        catch(IOException e){
+            System.out.println("Error Loading Image! Sorry!");
+        }
+        g.drawImage(introduction1, 0, 0, getWidth(), getHeight(),null);
 
 
-    @Override
+    }
+
+        @Override
     public void mousePressed(MouseEvent e) {}
 
     @Override
