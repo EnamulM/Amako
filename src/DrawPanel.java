@@ -67,8 +67,10 @@ public class DrawPanel extends JPanel implements MouseListener{
                     System.out.println("Works");
                     introduction(getGraphics());
                     next2 = false;
+                    Batman batman = new Batman(200,200, 20, 50, 0,0,200, 200);
+                    batman.bWalk(getGraphics());
                 }
-            } catch (IOException ex) {
+            } catch (IOException | InterruptedException ex) {
                 // Handle exception
                 System.err.println("Error loading background image: " + ex.getMessage());
             }
