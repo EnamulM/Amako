@@ -87,7 +87,7 @@ public class DrawPanel extends JPanel implements MouseListener{
                 }
                 g2d.drawImage(oldMan1, 0, 0, 500, 500, null);
                 g.setFont(new Font("Times New Roman", Font.BOLD, 100));
-                g.drawString("The Real Needs Your Help! ", 575, 500);
+                g.drawString("The Realm Needs Your Help! ", 575, 500);
                 g.drawString("An evil being has overtaken the land!", 200, 600);
                 g.drawString("We need you to free us! Press to Continue", 0, 700);
 
