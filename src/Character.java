@@ -9,6 +9,8 @@ public class Character {
     private int y;
     private int h;
     private int w;
+    private float speed;
+    private float jumpStrength ;
     public Character(int health, int damage, int shortRange, int longRange, int x, int y,int h, int w) {
         this.health = health;
         this.damage = damage;

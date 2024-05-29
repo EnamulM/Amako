@@ -5,6 +5,11 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.JOptionPane;
+
 
 public class DrawPanel extends JPanel implements MouseListener{
     private static int talking;
@@ -22,6 +27,25 @@ public class DrawPanel extends JPanel implements MouseListener{
     private boolean onStartingScreen = true;
     private boolean next1 = false;
     private boolean next2 = false;
+    String filepath = "Sound/MKTheme.wav";
+    public static void PlayMusic(String location){
+        try {
+            File musicPath = new File(location);
+            if (musicPath.exists()) {
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.start();
+            } else {
+                System.out.println("Can't find file");
+            }
+        }
+            catch(Exception e){
+                System.out.println(e);
+            }
+        }
+
+
 
 
 
