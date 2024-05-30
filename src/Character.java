@@ -3,19 +3,15 @@ import java.awt.Image;
 public class Character {
     private int health;
     private int damage;
-    private int shortRange;
-    private int longRange;
     private int x;
     private int y;
     private int h;
     private int w;
     private float speed;
     private float jumpStrength ;
-    public Character(int health, int damage, int shortRange, int longRange, int x, int y,int h, int w) {
+    public Character(int health, int damage, int x, int y,int h, int w) {
         this.health = health;
         this.damage = damage;
-        this.shortRange = shortRange;
-        this.longRange = longRange;
         this.x = x;
         this.y = y;
     } public void moveLeft(int distance) {
@@ -49,23 +45,6 @@ public class Character {
     public void setDamage(int damage) {
         this.damage = damage;
     }
-
-    public int getShortRange() {
-        return shortRange;
-    }
-
-    public void setShortRange(int shortRange) {
-        this.shortRange = shortRange;
-    }
-
-    public int getLongRange() {
-        return longRange;
-    }
-
-    public void setLongRange(int longRange) {
-        this.longRange = longRange;
-    }
-
     public int getX() {
         return x;
     }

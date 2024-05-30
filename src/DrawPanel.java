@@ -18,7 +18,8 @@ public class DrawPanel extends JPanel implements MouseListener{
     private static Image oldMan3;
     private static Image oldMan4;
     private static Image oldMan5;
-    private Image introduction1;
+    private long startTime;
+
 
 
     private Rectangle button;
@@ -91,7 +92,7 @@ public class DrawPanel extends JPanel implements MouseListener{
                     System.out.println("Works");
                     introduction(getGraphics());
                     next2 = false;
-                    Batman batman = new Batman(200,200, 20, 50, 0,0,200, 200);
+                    Batman batman = new Batman(200,200, 20, 50, 200, 200);
                     batman.bWalk(getGraphics());
                 }
             } catch (IOException | InterruptedException ex) {
@@ -155,7 +156,6 @@ public class DrawPanel extends JPanel implements MouseListener{
         catch(IOException e){
             System.out.println("Error Loading Image! Sorry!");
         }
-        g.drawImage(introduction1, 0, 0, getWidth(), getHeight(),null);
 
 
     }
