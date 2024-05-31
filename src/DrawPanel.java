@@ -45,11 +45,6 @@ public class DrawPanel extends JPanel implements MouseListener{
                 System.out.println(e);
             }
         }
-
-
-
-
-
     public DrawPanel() {
         button = new Rectangle(565, 310, 805, 265);
         addMouseListener(this);
@@ -70,6 +65,7 @@ public class DrawPanel extends JPanel implements MouseListener{
         g.drawString("AMAKO", 575, 500);
         g.drawRect((int) button.getX(), (int) button.getY(), (int) button.getWidth(), (int) button.getHeight());
         g.drawImage(background, 0, 0, getWidth(), getHeight(),null);
+
     }
 
     @Override
@@ -92,11 +88,9 @@ public class DrawPanel extends JPanel implements MouseListener{
                     System.out.println("Works");
                     introduction(getGraphics());
                     next2 = false;
-                    Batman batman = new Batman(200,200, 20, 50, 200, 200);
-                    batman.bWalk(getGraphics());
+                    Batman batman = new Batman(200,200, 20, 50);
                 }
-            } catch (IOException | InterruptedException ex) {
-                // Handle exception
+            } catch (IOException ex) {
                 System.err.println("Error loading background image: " + ex.getMessage());
             }
         }

@@ -1,6 +1,5 @@
 import java.awt.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,35 +7,46 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
-
-
-public class Batman extends JPanel {
+public class Batman extends JPanel implements KeyListener {
     private int health;
     private int damage;
     private int x;
     private int y;
-    private int h;
-    private int w;
-    private BufferedImage image;
+    private BufferedImage background;
+    private BufferedImage idleFrame;
+
+    private ArrayList<BufferedImage> walkFrames;
     private static Image bWalk;
-    private static Image background;
-    private final String walkFrames = "Batman/Walk";
-    private BufferedImage bigImage;
-    private ArrayList<BufferedImage> playerFrames;
+
     private int currentFrame;
     private long startTime;
+    private boolean isMoving;
 
-    public Batman(int health, int damage, int x, int y, int h, int w) {
+    public Batman(int health, int damage, int x, int y) {
         this.health = health;
         this.damage = damage;
         this.x = x;
         this.y = y;
-        playerFrames = new ArrayList<>();
-        bigImage = loadImage(walkFrames);
-        for (int i = 1; i < 5; i++) {
-            String file = walkFrames + i + ".png";
-            loadFrames(file);
+        walkFrames = new ArrayList<>();
+        loadWalkFrames();
+        currentFrame = 0;
+        startTime = System.currentTimeMillis();
+        isMoving = false;
+
+        try {
+            background = ImageIO.read(new File("BackgroundImages/OpeningBackGround.jpg"));
+        } catch (IOException e) {
+            System.out.println("Error Loading Image! Sorry! Background");
         }
+        try {
+            idleFrame = ImageIO.read(new File("Batman/Idle.png"));
+
+        } catch (IOException e) {
+            System.out.println("Error Loading Image! Sorry! Idle");
+        }
+
+        this.setFocusable(true);
+        this.addKeyListener(this);
     }
 
 
@@ -93,36 +103,74 @@ public class Batman extends JPanel {
         g2d.drawImage(bWalk, 200, 0, 500, 500, null);
         Thread.sleep(500);
     }
-
-    public BufferedImage loadImage(String fileName) {
-        try {
-            BufferedImage image;
-            image = ImageIO.read(new File(fileName));
-            return image;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+    private void loadWalkFrames() {
+        for (int i = 1; i <= 5; i++) {
+            String file = "Batman/Walk" + i + ".png";
+            try {
+                BufferedImage frame = ImageIO.read(new File(file));
+                walkFrames.add(frame);
+            } catch (IOException e) {
+                System.out.println("Error Loading Image! Sorry!");
+            }
         }
     }
 
-    public void loadFrames(String fileName) {
-        playerFrames.add(loadImage(fileName));
-    }
-
-    public void nextFrame() {
+    private void nextFrame() {
         currentFrame++;
-        if (currentFrame == playerFrames.size()) {
+        if (currentFrame == walkFrames.size()) {
             currentFrame = 0;
         }
     }
 
-    public void bWalk2() {
-        long currentTime = System.currentTimeMillis();
-        double timeElapsed = (double) (currentTime - startTime) / 1000;
-        if (timeElapsed > 0.3) {
-            startTime = System.currentTimeMillis();
-            // Load Next frame
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+
+        if (isMoving) {
+            long currentTime = System.currentTimeMillis();
+            double timeElapsed = (double) (currentTime - startTime) / 1000;
+            if (timeElapsed > 0.3) {
+                startTime = System.currentTimeMillis();
+                nextFrame();
+            }
+            g.drawImage(walkFrames.get(currentFrame), x, y, 100, 100, null);
+        } else {
+            g.drawImage(idleFrame, x, y, 100, 100, null);
         }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        switch (key) {
+            case KeyEvent.VK_W:
+                y -= 10;
+                isMoving = true;
+                break;
+            case KeyEvent.VK_S:
+                y += 10;
+                isMoving = true;
+                break;
+            case KeyEvent.VK_A:
+                x -= 10;
+                isMoving = true;
+                break;
+            case KeyEvent.VK_D:
+                x += 10;
+                isMoving = true;
+                break;
+        }
+        repaint();
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        isMoving = false;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
 }
 
