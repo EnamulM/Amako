@@ -19,12 +19,12 @@ public class Batman extends JPanel implements KeyListener {
     private ArrayList<BufferedImage> walkFrames;
     private ArrayList<BufferedImage> jumpFrames;
 
-    private int currentFrame;
-    private long startTime;
+    private int currentWalkFrame;
+    private int currentJumpFrame;
     private boolean isMoving;
     private boolean isJumping;
-    private int jumpHeight = 30;
-    private int jumpSpeed = 5;
+    private Timer jumpTimer;
+    private Timer walkTimer;
     private int jumpFrameCount;
 
     public Batman(int health, int damage, int x, int y) {
@@ -37,8 +37,8 @@ public class Batman extends JPanel implements KeyListener {
         jumpFrames = new ArrayList<>();
         loadWalkFrames();
         loadJumpFrames();
-        currentFrame = 0;
-        startTime = System.currentTimeMillis();
+        currentWalkFrame = 0;
+        currentJumpFrame = 0;
         isMoving = false;
         isJumping = false;
         jumpFrameCount = 0;
@@ -82,10 +82,45 @@ public class Batman extends JPanel implements KeyListener {
         }
     }
 
-    private void nextFrame(ArrayList<BufferedImage> frames) {
-        currentFrame++;
-        if (currentFrame == frames.size()) {
-            currentFrame = 0;
+    private void jump() {
+        if (isJumping) {
+            return;
+        }
+        isJumping = true;
+        jumpFrameCount = 0;
+        jumpTimer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jumpFrameCount < jumpFrames.size()) {
+                    currentJumpFrame = jumpFrameCount;
+                    y = startY - (int) (50 * Math.sin(Math.PI * jumpFrameCount / (jumpFrames.size() - 1)));
+                    jumpFrameCount++;
+                    repaint();
+                } else {
+                    ((Timer) e.getSource()).stop();
+                    isJumping = false;
+                    y = startY;
+                    repaint();
+                }
+            }
+        });
+        jumpTimer.start();
+    }
+
+    private void startWalking() {
+        if (walkTimer == null || !walkTimer.isRunning()) {
+            walkTimer = new Timer(300, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (isMoving) {
+                        currentWalkFrame = (currentWalkFrame + 1) % walkFrames.size();
+                        repaint();
+                    } else {
+                        ((Timer) e.getSource()).stop();
+                    }
+                }
+            });
+            walkTimer.start();
         }
     }
 
@@ -94,32 +129,10 @@ public class Batman extends JPanel implements KeyListener {
         super.paintComponent(g);
         g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
 
-        if (isJumping) {
-            long currentTime = System.currentTimeMillis();
-            double timeElapsed = (double) (currentTime - startTime) / 1000;
-            if (timeElapsed > 0.1) {
-                startTime = System.currentTimeMillis();
-                nextFrame(jumpFrames);
-                jumpFrameCount++;
-                if (jumpFrameCount < jumpFrames.size() / 2) {
-                    y -= jumpSpeed;
-                } else if (jumpFrameCount < jumpFrames.size()) {
-                    y += jumpSpeed;
-                } else {
-                    y = startY;
-                    isJumping = false;
-                    jumpFrameCount = 0;
-                }
-            }
-            g.drawImage(jumpFrames.get(currentFrame), x, y, 100, 100, null);
+        if (isJumping && currentJumpFrame < jumpFrames.size()) {
+            g.drawImage(jumpFrames.get(currentJumpFrame), x, y, 100, 100, null);
         } else if (isMoving) {
-            long currentTime = System.currentTimeMillis();
-            double timeElapsed = (double) (currentTime - startTime) / 1000;
-            if (timeElapsed > 0.3) {
-                startTime = System.currentTimeMillis();
-                nextFrame(walkFrames);
-            }
-            g.drawImage(walkFrames.get(currentFrame), x, y, 100, 100, null);
+            g.drawImage(walkFrames.get(currentWalkFrame), x, y, 100, 100, null);
         } else {
             g.drawImage(idleFrame, x, y, 100, 100, null);
         }
@@ -130,23 +143,22 @@ public class Batman extends JPanel implements KeyListener {
         int key = e.getKeyCode();
         switch (key) {
             case KeyEvent.VK_W:
-                if (!isJumping) {
-                    isJumping = true;
-                    currentFrame = 0;
-                    startTime = System.currentTimeMillis();
-                }
+                jump();
                 break;
             case KeyEvent.VK_S:
                 y += 10;
                 isMoving = true;
+                startWalking();
                 break;
             case KeyEvent.VK_A:
                 x -= 10;
                 isMoving = true;
+                startWalking();
                 break;
             case KeyEvent.VK_D:
                 x += 10;
                 isMoving = true;
+                startWalking();
                 break;
         }
         repaint();
