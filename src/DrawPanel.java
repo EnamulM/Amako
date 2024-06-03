@@ -1,6 +1,5 @@
 import java.awt.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -8,10 +7,8 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.JOptionPane;
 
-
-public class DrawPanel extends JPanel implements MouseListener{
+public class DrawPanel extends JPanel implements MouseListener, KeyListener {
     private static int talking;
     private static Image oldMan1;
     private static Image oldMan2;
@@ -20,14 +17,14 @@ public class DrawPanel extends JPanel implements MouseListener{
     private static Image oldMan5;
     private long startTime;
 
-
-
     private Rectangle button;
     private Image background;
     private JPanel mainPanel;
     private boolean onStartingScreen = true;
     private boolean next1 = false;
     private boolean next2 = false;
+    private Batman batman;
+
     String filepath = "Sound/MKTheme.wav";
     public static void PlayMusic(String location){
         try {
@@ -40,11 +37,11 @@ public class DrawPanel extends JPanel implements MouseListener{
             } else {
                 System.out.println("Can't find file");
             }
+        } catch(Exception e){
+            System.out.println(e);
         }
-            catch(Exception e){
-                System.out.println(e);
-            }
-        }
+    }
+
     public DrawPanel() {
         button = new Rectangle(565, 310, 805, 265);
         addMouseListener(this);
@@ -53,7 +50,9 @@ public class DrawPanel extends JPanel implements MouseListener{
         } catch (IOException e) {
             System.out.println("Error Loading Image! Sorry! (Error Here)");
         }
-
+        batman = new Batman(200, 20, 50, 400);
+        this.setFocusable(true);
+        this.addKeyListener(this);
     }
 
     protected void paintComponent(Graphics g) {
@@ -64,8 +63,11 @@ public class DrawPanel extends JPanel implements MouseListener{
         g.setFont(new Font("Times New Roman", Font.BOLD, 200));
         g.drawString("AMAKO", 575, 500);
         g.drawRect((int) button.getX(), (int) button.getY(), (int) button.getWidth(), (int) button.getHeight());
-        g.drawImage(background, 0, 0, getWidth(), getHeight(),null);
+        g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
 
+        if (!onStartingScreen && !next1 && !next2) {
+            batman.paintComponent(g);
+        }
     }
 
     @Override
@@ -77,84 +79,80 @@ public class DrawPanel extends JPanel implements MouseListener{
                     onStartingScreen = false;
                     next1 = true;
                     repaint();
-                }
-                else if(next1){
+                } else if(next1){
                     talk(getGraphics());
                     talk(getGraphics());
                     next1 = false;
                     next2 = true;
-                }
-                else if(next2){
+                } else if(next2){
                     System.out.println("Works");
                     introduction(getGraphics());
                     next2 = false;
-                    Batman batman = new Batman(200,200, 20, 50);
+                    repaint();
                 }
             } catch (IOException ex) {
                 System.err.println("Error loading background image: " + ex.getMessage());
             }
         }
-
     }
-    public void talk(Graphics g){
-            try {
-                Graphics2D g2d = (Graphics2D) g;
-                try {
-                    oldMan1 = ImageIO.read(new File("OldMan/Talking1.png"));
-                } catch (IOException e) {
-                    System.out.println("Error Loading Image! Sorry!");
-                }
-                g2d.drawImage(oldMan1, 0, 0, 500, 500, null);
-                g.setFont(new Font("Times New Roman", Font.BOLD, 100));
-                g.drawString("The Realm Needs Your Help! ", 575, 500);
-                g.drawString("An evil being has overtaken the land!", 200, 600);
-                g.drawString("We need you to free us! Press to Continue", 0, 700);
 
-                Thread.sleep(500);
-                try {
-                    oldMan2 = ImageIO.read(new File("OldMan/Talking2.png"));
-                } catch (IOException e) {
-                    System.out.println("Error Loading Image! Sorry!");
-                }
-                g2d.drawImage(oldMan2, 0, 0, 500, 500, null);
-                Thread.sleep(500);
-                try {
-                    oldMan3 = ImageIO.read(new File("OldMan/Talking3.png"));
-                } catch (IOException e) {
-                    System.out.println("Error Loading Image! Sorry!");
-                }
-                g2d.drawImage(oldMan3, 0, 0, 500, 500, null);
-                Thread.sleep(500);
-                try {
-                    oldMan4 = ImageIO.read(new File("OldMan/Talking4.png"));
-                } catch (IOException e) {
-                    System.out.println("Error Loading Image! Sorry!");
-                }
-                g2d.drawImage(oldMan4, 0, 0, 500, 500, null);
-                Thread.sleep(500);
-                try {
-                    oldMan5 = ImageIO.read(new File("OldMan/Talking5.png"));
-                } catch (IOException e) {
-                    System.out.println("Error Loading Image! Sorry!");
-                }
-                g2d.drawImage(oldMan5, 0, 0, 500, 500, null);
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                System.out.println("Thread sleep error");
+    public void talk(Graphics g){
+        try {
+            Graphics2D g2d = (Graphics2D) g;
+            try {
+                oldMan1 = ImageIO.read(new File("OldMan/Talking1.png"));
+            } catch (IOException e) {
+                System.out.println("Error Loading Image! Sorry!");
             }
+            g2d.drawImage(oldMan1, 0, 0, 500, 500, null);
+            g.setFont(new Font("Times New Roman", Font.BOLD, 100));
+            g.drawString("The Realm Needs Your Help! ", 575, 500);
+            g.drawString("An evil being has overtaken the land!", 200, 600);
+            g.drawString("We need you to free us! Press to Continue", 0, 700);
+
+            Thread.sleep(500);
+            try {
+                oldMan2 = ImageIO.read(new File("OldMan/Talking2.png"));
+            } catch (IOException e) {
+                System.out.println("Error Loading Image! Sorry!");
+            }
+            g2d.drawImage(oldMan2, 0, 0, 500, 500, null);
+            Thread.sleep(500);
+            try {
+                oldMan3 = ImageIO.read(new File("OldMan/Talking3.png"));
+            } catch (IOException e) {
+                System.out.println("Error Loading Image! Sorry!");
+            }
+            g2d.drawImage(oldMan3, 0, 0, 500, 500, null);
+            Thread.sleep(500);
+            try {
+                oldMan4 = ImageIO.read(new File("OldMan/Talking4.png"));
+            } catch (IOException e) {
+                System.out.println("Error Loading Image! Sorry!");
+            }
+            g2d.drawImage(oldMan4, 0, 0, 500, 500, null);
+            Thread.sleep(500);
+            try {
+                oldMan5 = ImageIO.read(new File("OldMan/Talking5.png"));
+            } catch (IOException e) {
+                System.out.println("Error Loading Image! Sorry!");
+            }
+            g2d.drawImage(oldMan5, 0, 0, 500, 500, null);
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            System.out.println("Thread sleep error");
         }
+    }
+
     public void introduction(Graphics g) {
         try{
             background = ImageIO.read(new File("BackgroundImages/Background1.jpg"));
-        }
-        catch(IOException e){
+        } catch(IOException e){
             System.out.println("Error Loading Image! Sorry!");
         }
-
-
     }
 
-        @Override
+    @Override
     public void mousePressed(MouseEvent e) {}
 
     @Override
@@ -166,5 +164,18 @@ public class DrawPanel extends JPanel implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {}
 
-}
+    @Override
+    public void keyPressed(KeyEvent e) {
+        batman.keyPressed(e);
+    }
 
+    @Override
+    public void keyReleased(KeyEvent e) {
+        batman.keyReleased(e);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        batman.keyTyped(e);
+    }
+}
