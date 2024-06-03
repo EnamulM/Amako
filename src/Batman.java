@@ -224,13 +224,5 @@ public class Batman extends JPanel implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
     }
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Batman Game");
-        Batman batman = new Batman(100, 10, 50, 50);
-        frame.add(batman);
-        frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
 }
 
