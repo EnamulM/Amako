@@ -18,13 +18,19 @@ public class Batman extends JPanel implements KeyListener {
 
     private ArrayList<BufferedImage> walkFrames;
     private ArrayList<BufferedImage> jumpFrames;
+    private ArrayList<BufferedImage> punchFrames;
 
     private int currentWalkFrame;
     private int currentJumpFrame;
+    private int currentPunchFrame;
     private boolean isMoving;
     private boolean isJumping;
+    private boolean isPunching;
+    private boolean isKicking;
+
     private Timer jumpTimer;
     private Timer walkTimer;
+    private Timer punchTimer;
     private int jumpFrameCount;
 
     public Batman(int health, int damage, int x, int y) {
@@ -33,14 +39,21 @@ public class Batman extends JPanel implements KeyListener {
         this.x = x;
         this.y = y;
         this.startY = y;
+
         walkFrames = new ArrayList<>();
         jumpFrames = new ArrayList<>();
+        punchFrames = new ArrayList<>();
+
         loadWalkFrames();
         loadJumpFrames();
+        loadPunchFrames();
         currentWalkFrame = 0;
         currentJumpFrame = 0;
+        currentPunchFrame = 0;
+
         isMoving = false;
         isJumping = false;
+        isPunching = false;
         jumpFrameCount = 0;
 
         try {
@@ -76,6 +89,18 @@ public class Batman extends JPanel implements KeyListener {
             try {
                 BufferedImage frame = ImageIO.read(new File(file));
                 jumpFrames.add(frame);
+            } catch (IOException e) {
+                System.out.println("Error Loading Image! Sorry!");
+            }
+        }
+    }
+
+    private void loadPunchFrames() {
+        for (int i = 1; i <= 2; i++) {
+            String file = "Batman/Punch" + i + ".png";
+            try {
+                BufferedImage frame = ImageIO.read(new File(file));
+                punchFrames.add(frame);
             } catch (IOException e) {
                 System.out.println("Error Loading Image! Sorry!");
             }
@@ -124,6 +149,28 @@ public class Batman extends JPanel implements KeyListener {
         }
     }
 
+    private void punch() {
+        if (isPunching) {
+            return;
+        }
+        isPunching = true;
+        currentPunchFrame = 0;
+        punchTimer = new Timer(150, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (currentPunchFrame < punchFrames.size()) {
+                    repaint();
+                    currentPunchFrame++;
+                } else {
+                    ((Timer) e.getSource()).stop();
+                    isPunching = false;
+                    repaint();
+                }
+            }
+        });
+        punchTimer.start();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -131,6 +178,8 @@ public class Batman extends JPanel implements KeyListener {
 
         if (isJumping && currentJumpFrame < jumpFrames.size()) {
             g.drawImage(jumpFrames.get(currentJumpFrame), x, y, 100, 100, null);
+        } else if (isPunching && currentPunchFrame < punchFrames.size()) {
+            g.drawImage(punchFrames.get(currentPunchFrame), x, y, 100, 100, null);
         } else if (isMoving) {
             g.drawImage(walkFrames.get(currentWalkFrame), x, y, 100, 100, null);
         } else {
@@ -160,6 +209,9 @@ public class Batman extends JPanel implements KeyListener {
                 isMoving = true;
                 startWalking();
                 break;
+            case KeyEvent.VK_E:
+                punch();
+                break;
         }
         repaint();
     }
@@ -172,4 +224,13 @@ public class Batman extends JPanel implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
     }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Batman Game");
+        Batman batman = new Batman(100, 10, 50, 50);
+        frame.add(batman);
+        frame.setSize(800, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
 }
+
