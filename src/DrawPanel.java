@@ -24,6 +24,7 @@ public class DrawPanel extends JPanel implements MouseListener, KeyListener {
     private boolean next1 = false;
     private boolean next2 = false;
     private Batman batman;
+    private Sukuna sukuna;
 
     String filepath = "Sound/MKTheme.wav";
     public static void PlayMusic(String location){
@@ -51,6 +52,7 @@ public class DrawPanel extends JPanel implements MouseListener, KeyListener {
             System.out.println("Error Loading Image! Sorry! (Error Here)");
         }
         batman = new Batman(200, 20, 50, 400);
+        sukuna = new Sukuna(200,20,50,500);
         this.setFocusable(true);
         this.addKeyListener(this);
     }
@@ -67,6 +69,7 @@ public class DrawPanel extends JPanel implements MouseListener, KeyListener {
 
         if (!onStartingScreen && !next1 && !next2) {
             batman.paintComponent(g);
+            sukuna.paintComponent(g);
         }
     }
 
@@ -167,15 +170,18 @@ public class DrawPanel extends JPanel implements MouseListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         batman.keyPressed(e);
+        sukuna.keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         batman.keyReleased(e);
+        sukuna.keyReleased(e);
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
         batman.keyTyped(e);
+        sukuna.keyTyped(e);
     }
 }
