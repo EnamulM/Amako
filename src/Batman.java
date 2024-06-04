@@ -15,27 +15,24 @@ public class Batman extends JPanel implements KeyListener {
     private int startY;
     private BufferedImage background;
     private BufferedImage idleFrame;
-
     private ArrayList<BufferedImage> walkFrames;
     private ArrayList<BufferedImage> jumpFrames;
     private ArrayList<BufferedImage> punchFrames;
     private ArrayList<BufferedImage> kickFrames;
-
     private int currentWalkFrame;
     private int currentJumpFrame;
     private int currentPunchFrame;
     private int currentKickFrame;
-
-    private boolean isMoving;
     private boolean isJumping;
     private boolean isPunching;
     private boolean isKicking;
-
     private Timer jumpTimer;
     private Timer walkTimer;
     private Timer punchTimer;
     private Timer kickTimer;
     private int jumpFrameCount;
+
+    private ArrayList<Integer> pressedKeys;
 
     public Batman(int health, int damage, int x, int y) {
         this.health = health;
@@ -55,11 +52,11 @@ public class Batman extends JPanel implements KeyListener {
         currentJumpFrame = 0;
         currentPunchFrame = 0;
         currentKickFrame = 0;
-        isMoving = false;
         isJumping = false;
         isPunching = false;
         isKicking = false;
         jumpFrameCount = 0;
+        pressedKeys = new ArrayList<>();
         try {
             background = ImageIO.read(new File("BackgroundImages/OpeningBackGround.jpg"));
         } catch (IOException e) {
@@ -73,6 +70,14 @@ public class Batman extends JPanel implements KeyListener {
 
         this.setFocusable(true);
         this.addKeyListener(this);
+        Timer game = new Timer(20, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateGame();
+                repaint();
+            }
+        });
+        game.start();
     }
 
     private void loadWalkFrames() {
@@ -134,14 +139,12 @@ public class Batman extends JPanel implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 if (jumpFrameCount < jumpFrames.size()) {
                     currentJumpFrame = jumpFrameCount;
-                    y = startY - (int) (50 * Math.sin(Math.PI * jumpFrameCount / (jumpFrames.size() - 1)));
+                    y = startY - (int) (125 * Math.sin(Math.PI * jumpFrameCount / (jumpFrames.size() - 1)));
                     jumpFrameCount++;
-                    repaint();
                 } else {
                     ((Timer) e.getSource()).stop();
                     isJumping = false;
                     y = startY;
-                    repaint();
                 }
             }
         });
@@ -150,12 +153,10 @@ public class Batman extends JPanel implements KeyListener {
 
     private void startWalking() {
         if (walkTimer == null || !walkTimer.isRunning()) {
-            walkTimer = new Timer(300, new ActionListener() {
-                @Override
+            walkTimer = new Timer(150, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (isMoving) {
+                    if (!pressedKeys.isEmpty()) {
                         currentWalkFrame = (currentWalkFrame + 1) % walkFrames.size();
-                        repaint();
                     } else {
                         ((Timer) e.getSource()).stop();
                     }
@@ -175,12 +176,10 @@ public class Batman extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentPunchFrame < punchFrames.size()) {
-                    repaint();
                     currentPunchFrame++;
                 } else {
                     ((Timer) e.getSource()).stop();
                     isPunching = false;
-                    repaint();
                 }
             }
         });
@@ -197,16 +196,38 @@ public class Batman extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentKickFrame < kickFrames.size()) {
-                    repaint();
                     currentKickFrame++;
                 } else {
                     ((Timer) e.getSource()).stop();
                     isKicking = false;
-                    repaint();
                 }
             }
         });
         kickTimer.start();
+    }
+
+    private void updateGame() {
+        if (pressedKeys.contains(KeyEvent.VK_W)) {
+            jump();
+        }
+        if (pressedKeys.contains(KeyEvent.VK_S)) {
+            y += 5;
+            startWalking();
+        }
+        if (pressedKeys.contains(KeyEvent.VK_A)) {
+            x -= 5;
+            startWalking();
+        }
+        if (pressedKeys.contains(KeyEvent.VK_D)) {
+            x += 5;
+            startWalking();
+        }
+        if (pressedKeys.contains(KeyEvent.VK_E)) {
+            punch();
+        }
+        if (pressedKeys.contains(KeyEvent.VK_R)) {
+            kick();
+        }
     }
 
     @Override
@@ -220,7 +241,7 @@ public class Batman extends JPanel implements KeyListener {
             g.drawImage(punchFrames.get(currentPunchFrame), x, y, 100, 100, null);
         } else if (isKicking && currentKickFrame < kickFrames.size()) {
             g.drawImage(kickFrames.get(currentKickFrame), x, y, 100, 100, null);
-        } else if (isMoving) {
+        } else if (!pressedKeys.isEmpty()) {
             g.drawImage(walkFrames.get(currentWalkFrame), x, y, 100, 100, null);
         } else {
             g.drawImage(idleFrame, x, y, 100, 100, null);
@@ -229,43 +250,20 @@ public class Batman extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        switch (key) {
-            case KeyEvent.VK_W:
-                jump();
-                break;
-            case KeyEvent.VK_S:
-                y += 10;
-                isMoving = true;
-                startWalking();
-                break;
-            case KeyEvent.VK_A:
-                x -= 10;
-                isMoving = true;
-                startWalking();
-                break;
-            case KeyEvent.VK_D:
-                x += 10;
-                isMoving = true;
-                startWalking();
-                break;
-            case KeyEvent.VK_E:
-                punch();
-                break;
-            case KeyEvent.VK_R:
-                kick();
-                break;
+        if (!pressedKeys.contains(e.getKeyCode())) {
+            pressedKeys.add(e.getKeyCode());
         }
-        repaint();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        isMoving = false;
+        pressedKeys.remove(Integer.valueOf(e.getKeyCode()));
+        if (pressedKeys.isEmpty()) {
+            isJumping = false;
+        }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
     }
 }
-
