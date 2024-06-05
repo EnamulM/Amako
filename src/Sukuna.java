@@ -34,8 +34,8 @@ public class Sukuna extends JPanel implements KeyListener {
         this.health = health;
         this.damage = damage;
         this.x = 700;
-        this.y = 400;
-        this.startY = 400;
+        this.y = 500;
+        this.startY = 500;
         walkFrames = new ArrayList<>();
         jumpFrames = new ArrayList<>();
         punchFrames = new ArrayList<>();

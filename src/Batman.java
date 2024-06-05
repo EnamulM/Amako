@@ -38,8 +38,8 @@ public class Batman extends JPanel implements KeyListener {
         this.health = health;
         this.damage = damage;
         this.x = x;
-        this.y = 400;
-        this.startY = 400;
+        this.y = 510;
+        this.startY = 510;
         walkFrames = new ArrayList<>();
         jumpFrames = new ArrayList<>();
         punchFrames = new ArrayList<>();
