@@ -16,17 +16,17 @@ public class Sukuna extends JPanel implements KeyListener {
     private BufferedImage background;
     private BufferedImage idleFrame;
     private ArrayList<BufferedImage> walkFrames;
-    private ArrayList<BufferedImage> jumpFrames;
+    private ArrayList<BufferedImage> crouchFrames;
     private ArrayList<BufferedImage> punchFrames;
     private int currentWalkFrame;
-    private int currentJumpFrame;
+    private int currentCrouchFrame;
     private int currentPunchFrame;
-    private boolean isJumping;
+    private boolean isCrouching;
     private boolean isPunching;
-    private Timer jumpTimer;
+    private Timer crouchTimer;
     private Timer walkTimer;
     private Timer punchTimer;
-    private int jumpFrameCount;
+    private int crouchFrameCount;
 
     private ArrayList<Integer> pressedKeys;
 
@@ -37,17 +37,17 @@ public class Sukuna extends JPanel implements KeyListener {
         this.y = 500;
         this.startY = 500;
         walkFrames = new ArrayList<>();
-        jumpFrames = new ArrayList<>();
+        crouchFrames = new ArrayList<>();
         punchFrames = new ArrayList<>();
         loadWalkFrames();
-        loadJumpFrames();
+        loadCrouchFrames();
         loadPunchFrames();
         currentWalkFrame = 0;
-        currentJumpFrame = 0;
+        currentCrouchFrame = 0;
         currentPunchFrame = 0;
-        isJumping = false;
+        isCrouching = false;
         isPunching = false;
-        jumpFrameCount = 0;
+        crouchFrameCount = 0;
         pressedKeys = new ArrayList<>();
         try {
             background = ImageIO.read(new File("BackgroundImages/OpeningBackGround.jpg"));
@@ -84,12 +84,12 @@ public class Sukuna extends JPanel implements KeyListener {
         }
     }
 
-    private void loadJumpFrames() {
-        for (int i = 1; i <= 2; i++) {
-            String file = "Sukuna/SJump" + i + ".png";
+    private void loadCrouchFrames() {
+        for (int i = 1; i <= 4; i++) {
+            String file = "Sukuna/SCrouch" + i + ".png";
             try {
                 BufferedImage frame = ImageIO.read(new File(file));
-                jumpFrames.add(frame);
+                crouchFrames.add(frame);
             } catch (IOException e) {
                 System.out.println("Error Loading Image! Sorry!");
             }
@@ -108,29 +108,29 @@ public class Sukuna extends JPanel implements KeyListener {
         }
     }
 
-
-    private void jump() {
-        if (isJumping) {
+    private void crouch() {
+        if (isCrouching) {
             return;
         }
-        isJumping = true;
-        jumpFrameCount = 0;
-        jumpTimer = new Timer(100, new ActionListener() {
+        isCrouching = true;
+        crouchFrameCount = 0;
+        crouchTimer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (jumpFrameCount < jumpFrames.size()) {
-                    currentJumpFrame = jumpFrameCount;
-                    y = startY - (int) (125 * Math.sin(Math.PI * jumpFrameCount / (jumpFrames.size() - 1)));
-                    jumpFrameCount++;
+                if (crouchFrameCount < crouchFrames.size()) {
+                    currentCrouchFrame = crouchFrameCount;
+                    y = startY + 25; // Adjust y-position to simulate crouching
+                    crouchFrameCount++;
                 } else {
                     ((Timer) e.getSource()).stop();
-                    isJumping = false;
+                    isCrouching = false;
                     y = startY;
                 }
             }
         });
-        jumpTimer.start();
+        crouchTimer.start();
     }
+
     private void startWalking() {
         if (walkTimer == null || !walkTimer.isRunning()) {
             walkTimer = new Timer(150, new ActionListener() {
@@ -166,10 +166,9 @@ public class Sukuna extends JPanel implements KeyListener {
         punchTimer.start();
     }
 
-
     private void updateGame() {
         if (pressedKeys.contains(KeyEvent.VK_I)) {
-            jump();
+            crouch();
         }
         if (pressedKeys.contains(KeyEvent.VK_K)) {
             y += 5;
@@ -193,8 +192,8 @@ public class Sukuna extends JPanel implements KeyListener {
         super.paintComponent(g);
         g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
 
-        if (isJumping && currentJumpFrame < jumpFrames.size()) {
-            g.drawImage(jumpFrames.get(currentJumpFrame), x, y, 100, 100, null);
+        if (isCrouching && currentCrouchFrame < crouchFrames.size()) {
+            g.drawImage(crouchFrames.get(currentCrouchFrame), x, y, 100, 100, null);
         } else if (isPunching && currentPunchFrame < punchFrames.size()) {
             g.drawImage(punchFrames.get(currentPunchFrame), x, y, 100, 100, null);
         } else if (!pressedKeys.isEmpty()) {
@@ -215,7 +214,7 @@ public class Sukuna extends JPanel implements KeyListener {
     public void keyReleased(KeyEvent e) {
         pressedKeys.remove(Integer.valueOf(e.getKeyCode()));
         if (pressedKeys.isEmpty()) {
-            isJumping = false;
+            isCrouching = false;
         }
     }
 
