@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 public class Batman extends JPanel implements KeyListener {
     private int health;
+    private int maxHealth;
     private int damage;
     private int x;
     private int y;
@@ -39,6 +40,7 @@ public class Batman extends JPanel implements KeyListener {
 
     public Batman(int health, int damage, int x, int y) {
         this.health = health;
+        this.maxHealth = health;
         this.damage = damage;
         this.x = x;
         this.y = 510;
@@ -235,7 +237,7 @@ public class Batman extends JPanel implements KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
-
+        drawHealthBar(g);
         if (isJumping && currentJumpFrame < jumpFrames.size()) {
             g.drawImage(jumpFrames.get(currentJumpFrame), x, y, 100, 100, null);
         } else if (isPunching && currentPunchFrame < punchFrames.size()) {
@@ -247,6 +249,17 @@ public class Batman extends JPanel implements KeyListener {
         } else {
             g.drawImage(idleFrame, x, y, 100, 100, null);
         }
+    }
+    private void drawHealthBar(Graphics g) {
+        int barWidth = 100;
+        int barHeight = 10;
+        int barX = x;
+        int barY = y - 20;
+        g.setColor(Color.RED);
+        g.fillRect(barX, barY, barWidth, barHeight);
+        int currentHealthWidth = (int) ((health / (double) maxHealth) * barWidth);
+        g.setColor(Color.BLACK);
+        g.fillRect(barX, barY, currentHealthWidth, barHeight);
     }
     public void dealDamage(Sukuna sukuna) {
         if (isHitting(sukuna)) {

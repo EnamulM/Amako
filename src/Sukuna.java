@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 public class Sukuna extends JPanel implements KeyListener {
     private int health;
+    private int maxHealth;
     private int damage;
     private int x;
     private int y;
@@ -35,6 +36,7 @@ public class Sukuna extends JPanel implements KeyListener {
 
     public Sukuna(int health, int damage, int x, int y) {
         this.health = health;
+        this.maxHealth = health;
         this.damage = damage;
         this.x = 700;
         this.y = 500;
@@ -191,7 +193,7 @@ public class Sukuna extends JPanel implements KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
-
+        drawHealthBar(g);
         if (isCrouching && currentCrouchFrame < crouchFrames.size()) {
             g.drawImage(crouchFrames.get(currentCrouchFrame), x, y, 100, 100, null);
         } else if (isPunching && currentPunchFrame < punchFrames.size()) {
@@ -201,6 +203,17 @@ public class Sukuna extends JPanel implements KeyListener {
         } else {
             g.drawImage(idleFrame, x, y, 100, 100, null);
         }
+    }
+    private void drawHealthBar(Graphics g) {
+        int barWidth = 100;
+        int barHeight = 10;
+        int barX = x;
+        int barY = y - 20;
+        g.setColor(Color.RED);
+        g.fillRect(barX, barY, barWidth, barHeight);
+        int currentHealthWidth = (int) ((health / (double) maxHealth) * barWidth);
+        g.setColor(Color.YELLOW);
+        g.fillRect(barX, barY, currentHealthWidth, barHeight);
     }
 
     @Override
