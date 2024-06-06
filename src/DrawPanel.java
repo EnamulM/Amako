@@ -120,10 +120,10 @@ public class DrawPanel extends JPanel implements MouseListener, KeyListener {
                 System.out.println("Error Loading Image! Sorry!");
             }
             g2d.drawImage(oldMan1, 0, 0, 500, 500, null);
-            g.setFont(new Font("Times New Roman", Font.BOLD, 100));
-            g.drawString("The Realm Needs Your Help! ", 575, 500);
-            g.drawString("An evil being has overtaken the land!", 200, 600);
-            g.drawString("We need you to free us! Press to Continue", 0, 700);
+            g.setFont(new Font("Times New Roman", Font.BOLD, 30));
+            g.drawString("Fight to the Death! ", 575, 500);
+            g.drawString("Batman! Use W to Jump, A to Move Left, D to move Right. Punch Using E and Kick using R", 0, 600);
+            g.drawString("Sukuna! Use I to crouch, J to move Left, L to move Right, and O to Punch!", 0, 700);
 
             Thread.sleep(500);
             try {
