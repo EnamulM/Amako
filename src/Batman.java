@@ -33,6 +33,9 @@ public class Batman extends JPanel implements KeyListener {
     private int jumpFrameCount;
 
     private ArrayList<Integer> pressedKeys;
+    private boolean punchHandled = false;
+    private boolean kickHandled = false;
+    private boolean batmanLost = false;
 
     public Batman(int health, int damage, int x, int y) {
         this.health = health;
@@ -180,6 +183,7 @@ public class Batman extends JPanel implements KeyListener {
                 } else {
                     ((Timer) e.getSource()).stop();
                     isPunching = false;
+                    punchHandled = false;
                 }
             }
         });
@@ -200,6 +204,7 @@ public class Batman extends JPanel implements KeyListener {
                 } else {
                     ((Timer) e.getSource()).stop();
                     isKicking = false;
+                    kickHandled = false;
                 }
             }
         });
@@ -247,6 +252,23 @@ public class Batman extends JPanel implements KeyListener {
             g.drawImage(idleFrame, x, y, 100, 100, null);
         }
     }
+    public void dealDamage(Sukuna sukuna) {
+        if (isHitting(sukuna)) {
+            if (isPunching && !punchHandled) {
+                sukuna.takeDamage(damage);
+                punchHandled = true;
+            }
+            if (isKicking && !kickHandled) {
+                sukuna.takeDamage(damage);
+                kickHandled = true;
+            }
+        }
+    }
+    private boolean isHitting(Sukuna sukuna) {
+        Rectangle batmanBounds = new Rectangle(x, y, 100, 100);
+        Rectangle sukunaBounds = new Rectangle(sukuna.getX(), sukuna.getY(), 100, 100);
+        return batmanBounds.intersects(sukunaBounds);
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -265,5 +287,35 @@ public class Batman extends JPanel implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+    }
+    public boolean isPunching() {
+        return isPunching;
+    }
+
+    public boolean isKicking() {
+        return isKicking;
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+        System.out.println(health);
+        if (health <= 0) {
+            System.out.println("Batman has been defeated");
+            batmanLost = true;
+        }
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+    public boolean batmanLost(){
+       return batmanLost;
     }
 }

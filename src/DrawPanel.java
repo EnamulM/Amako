@@ -70,6 +70,18 @@ public class DrawPanel extends JPanel implements MouseListener, KeyListener {
         if (!onStartingScreen && !next1 && !next2) {
             batman.paintComponent(g);
             sukuna.paintComponent(g);
+            batman.dealDamage(sukuna);
+            sukuna.dealDamage(batman);
+        }
+        if(batman.batmanLost()){
+            g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+            g.setFont(new Font("Times New Roman", Font.BOLD, 100));
+            g.drawString("Batman Has Lost", 375, 500);
+        }
+        if(sukuna.sukunaLost()){
+            g.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+            g.setFont(new Font("Times New Roman", Font.BOLD, 100));
+            g.drawString("Sukuna Has Lost", 375, 500);
         }
     }
 
@@ -183,5 +195,10 @@ public class DrawPanel extends JPanel implements MouseListener, KeyListener {
     public void keyTyped(KeyEvent e) {
         batman.keyTyped(e);
         sukuna.keyTyped(e);
+    }
+    private boolean isColliding(Batman batman, Sukuna sukuna) {
+        Rectangle batmanBounds = new Rectangle(batman.getX(), batman.getY(), 100, 100);
+        Rectangle sukunaBounds = new Rectangle(sukuna.getX(), sukuna.getY(), 100, 100);
+        return batmanBounds.intersects(sukunaBounds);
     }
 }

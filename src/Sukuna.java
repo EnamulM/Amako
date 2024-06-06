@@ -29,6 +29,9 @@ public class Sukuna extends JPanel implements KeyListener {
     private int crouchFrameCount;
 
     private ArrayList<Integer> pressedKeys;
+    private boolean punchHandled = false;
+    private boolean sukunaLost = false;
+
 
     public Sukuna(int health, int damage, int x, int y) {
         this.health = health;
@@ -119,7 +122,7 @@ public class Sukuna extends JPanel implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 if (crouchFrameCount < crouchFrames.size()) {
                     currentCrouchFrame = crouchFrameCount;
-                    y = startY + 25; // Adjust y-position to simulate crouching
+                    y = startY + 25;
                     crouchFrameCount++;
                 } else {
                     ((Timer) e.getSource()).stop();
@@ -160,6 +163,7 @@ public class Sukuna extends JPanel implements KeyListener {
                 } else {
                     ((Timer) e.getSource()).stop();
                     isPunching = false;
+                    punchHandled = false;
                 }
             }
         });
@@ -217,8 +221,47 @@ public class Sukuna extends JPanel implements KeyListener {
             isCrouching = false;
         }
     }
+    public void dealDamage(Batman batman) {
+        if (isHitting(batman)) {
+            if (isPunching && !punchHandled) {
+                batman.takeDamage(damage);
+                punchHandled = true;
+            }
+        }
+    }
+    private boolean isHitting(Batman batman) {
+        Rectangle sukunaBounds = new Rectangle(x, y, 100, 100);
+        Rectangle batmanBounds = new Rectangle(batman.getX(), batman.getY(), 100, 100);
+        return sukunaBounds.intersects(batmanBounds);
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
+    }
+    public boolean isPunching() {
+        return isPunching;
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+        System.out.println(health);
+        if (health <= 0) {
+            System.out.println("Sukuna has been defeated");
+            sukunaLost = true;
+        }
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+    public boolean sukunaLost(){
+        return sukunaLost;
     }
 }
