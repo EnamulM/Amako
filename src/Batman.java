@@ -215,10 +215,6 @@ public class Batman extends JPanel implements KeyListener {
         if (pressedKeys.contains(KeyEvent.VK_W)) {
             jump();
         }
-        if (pressedKeys.contains(KeyEvent.VK_S)) {
-            y += 5;
-            startWalking();
-        }
         if (pressedKeys.contains(KeyEvent.VK_A)) {
             x -= 5;
             startWalking();

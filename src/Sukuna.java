@@ -174,10 +174,6 @@ public class Sukuna extends JPanel implements KeyListener {
         if (pressedKeys.contains(KeyEvent.VK_I)) {
             crouch();
         }
-        if (pressedKeys.contains(KeyEvent.VK_K)) {
-            y += 5;
-            startWalking();
-        }
         if (pressedKeys.contains(KeyEvent.VK_J)) {
             x -= 5;
             startWalking();
